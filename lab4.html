@@ -1,0 +1,120 @@
+<!DOCTYPE HTML>
+<meta charset="UTF-8"> 
+<html>
+  <head>
+    <style>
+      body {
+        margin: 0px;
+        padding: 0px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container"></div>
+	<canvas id="canvas" style="border: none;" width="256" height="256">
+<script src="../lab4/js/webgl-utils.js"></script>
+<script src="../lab4/js/planetClass.js"></script>
+<script src="../lab4/js/sunClass.js"></script>
+<script src="http://www.html5canvastutorials.com/libraries/three.min.js"></script>
+<script id="vertex-shader" type="x-shader/x-vertex">
+	attribute vec4 vPosition;
+	attribute vec4 vNormal;
+	varying vec4 fColor;
+
+	uniform vec4 ambientProduct, diffuseProduct, specularProduct;
+	uniform mat4 modelViewMatrix;
+	uniform mat4 projectionMatrix;
+	uniform vec4 lightPosition;
+	uniform float shininess;
+	uniform mat3 normalMatrix;
+	
+	void main(void) 
+	{
+	
+	    vec3 pos = -(modelViewMatrix * vPosition).xyz;
+	    vec3 light = lightPosition.xyz;
+	    vec3 L = normalize( light - pos );
+
+	    vec3 E = normalize( -pos );
+	    vec3 H = normalize( L + E );
+		// Transform vertex normal into eye coordinates
+            vec3 N = normalize( normalMatrix*vNormal.xyz);
+		 // Compute terms in the illumination equation
+    	    vec4 ambient = ambientProduct;
+
+    	float Kd = max( dot(L, N), 0.0 );
+    	vec4  diffuse = Kd*diffuseProduct;
+
+    	float Ks = pow( max(dot(N, H), 0.0), shininess );
+    	vec4  specular = Ks * specularProduct;
+    
+    	if( dot(L, N) < 0.0 ) {
+		specular = vec4(0.0, 0.0, 0.0, 1.0);
+   	 } 
+
+   	 gl_Position = projectionMatrix * modelViewMatrix * vPosition;
+  	  
+  	  fColor = ambient + diffuse + specular;
+   	 fColor.a = 1.0;    
+
+} 
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+
+precision mediump float;
+
+//varying vec4 fColor;
+
+void main(void)
+{
+    gl_FragColor = (1,1,1,1);
+}
+</script>
+    <script defer="defer">
+
+      // renderer
+	var externalCanvas = document.getElementById('canvas');
+	renderer = new THREE.WebGLRenderer({ 'canvas': externalCanvas, 'clearColor': 0xffffff });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(renderer.domElement);
+ 
+      // camera
+      var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1000, 10000);
+      camera.position.z = 5000;
+ 
+      // scene
+      var scene = new THREE.Scene();
+	
+	var light = new THREE.PointLight( 0xffffff, 1.0 );
+ 	light.position.set( 0,0,0);
+    	scene.add(light);
+var sun = new Sun(0xFF0000, 100);   
+scene.add(sun.mesh);   
+var planetMercury = new Planet("Murcury", 0xFF0000, 15, 359, 88, 0, sun);
+var planetVenus = new Planet("Venus", 0xFF9900, 38, 672, 225, 0, sun);
+var planetEarth = new Planet("Earth", 0x009944, 40, 929, 365, 0, sun);
+var planetMars = new Planet("Mars", 0xFF1111, 21, 1416, 687, 0, sun);
+sun.AddChild(planetMercury);
+sun.AddChild(planetVenus);
+sun.AddChild(planetEarth);
+sun.AddChild(planetMars);
+
+scene.add(planetMercury.mesh);
+scene.add(planetVenus.mesh);
+scene.add(planetEarth.mesh);
+scene.add(planetMars.mesh);
+	render();
+	
+	function render() {
+		requestAnimFrame(render);
+		update();	
+		renderer.render(scene, camera);
+	}
+	function update(){
+		sun.Update();
+		
+	}	
+    </script>
+  </body>
+</html>     
