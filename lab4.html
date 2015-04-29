@@ -73,7 +73,7 @@
     </script>
     <script>
 
-      var externalCanvas, renderer, camera, controls, scene, container, light, sun;
+      var externalCanvas, renderer, camera, controls, scene, container, light, sun, backgroundScene, backgroundCamera;
 
       init();
       animate();
@@ -103,10 +103,12 @@
       	scene.add(light);
         sun = new Sun(0xFF0000, 100);
         scene.add(sun.mesh);
-        var planetMercury = new Planet("Murcury", 0xFF0000, 15, 359, 88, 0, sun);
-        var planetVenus = new Planet("Venus", 0xFF9900, 38, 672, 225, 0, sun);
-        var planetEarth = new Planet("Earth", 0x009944, 40, 929, 365, 0, sun);
-        var planetMars = new Planet("Mars", 0xFF1111, 21, 1416, 687, 0, sun);
+		THREE.ImageUtils.crossOrigin = '';
+		var url = 'http://i.imgur.com/GNAxUAg.jpg';
+        var planetMercury = new Planet("Murcury", url, 15, 359, 88, 0, sun);
+        var planetVenus = new Planet("Venus", url, 38, 672, 225, 0, sun);
+        var planetEarth = new Planet("Earth", url, 40, 929, 365, 0, sun);
+        var planetMars = new Planet("Mars", url, 21, 1416, 687, 0, sun);
         sun.AddChild(planetMercury);
         sun.AddChild(planetVenus);
         sun.AddChild(planetEarth);
@@ -116,7 +118,24 @@
         scene.add(planetVenus.mesh);
         scene.add(planetEarth.mesh);
         scene.add(planetMars.mesh);
-
+		
+		// background
+		/*
+		THREE.ImageUtils.crossOrigin = '';
+	    var backgroundTexture = THREE.ImageUtils.loadTexture( 'http://i.imgur.com/Uluahlu.jpg' );
+	    var backgroundMesh = new THREE.Mesh(
+            new THREE.PlaneGeometry(2, 2, 0),
+            new THREE.MeshBasicMaterial({
+                map: backgroundTexture
+            }));
+        backgroundMesh.material.depthTest = false;
+        backgroundMesh.material.depthWrite = false;
+	    backgroundScene = new THREE.Scene();
+        backgroundCamera = new THREE.Camera();
+        backgroundScene.add(backgroundCamera);
+        backgroundScene.add(backgroundMesh);
+		*/
+		
         // renderer
         renderer = new THREE.WebGLRenderer({ antialias: false });
         renderer.setSize(window.innerWidth, window.innerHeight);
@@ -128,6 +147,7 @@
       }
 
       function render() {
+	    // renderer.render(backgroundScene, backgroundCamera);
         renderer.render(scene, camera);
       }
 
