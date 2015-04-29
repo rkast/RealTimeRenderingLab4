@@ -101,7 +101,21 @@
 		THREE.ImageUtils.crossOrigin = '';
       	light = new THREE.PointLight( 0xffffff, 1.0 );
        	light.position.set( 0,0,0);
-      	scene.add(light);
+		scene.add(light);
+		
+		var dirLight1 = new THREE.DirectionalLight( 0xffffff, 0.2 );
+		dirLight1.position.set( 1, 0, 0 );
+		var dirLight2 = new THREE.DirectionalLight( 0xffffff, 0.2 );
+		dirLight2.position.set( -1, 0, 0 );
+		var dirLight3 = new THREE.DirectionalLight( 0xffffff, 0.2 );
+		dirLight3.position.set( 0, 0, 1 );
+		var dirLight4 = new THREE.DirectionalLight( 0xffffff, 0.2 );
+		dirLight4.position.set( 0, 0, -1 );
+		scene.add( dirLight1 );
+		scene.add( dirLight2 );
+		scene.add( dirLight3 );
+		scene.add( dirLight4 );
+      	
         sun = new Sun(100);
         scene.add(sun.mesh);
 		
