@@ -71,50 +71,61 @@ void main(void)
     gl_FragColor = (1,1,1,1);
 }
 </script>
-    <script defer="defer">
+<script defer="defer">
 
-      // renderer
-	var externalCanvas = document.getElementById('canvas');
-	renderer = new THREE.WebGLRenderer({ 'canvas': externalCanvas, 'clearColor': 0xffffff });
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      document.body.appendChild(renderer.domElement);
+// renderer
+var externalCanvas = document.getElementById('canvas');
+renderer = new THREE.WebGLRenderer({ 'canvas': externalCanvas, 'clearColor': 0xffffff });
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
  
-      // camera
-      var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1000, 10000);
-      camera.position.z = 5000;
+// camera
+var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1000, 10000);
+camera.position.z = 5000;
  
-      // scene
-      var scene = new THREE.Scene();
+// scene
+var scene = new THREE.Scene();
 	
-	var light = new THREE.PointLight( 0xffffff, 1.0 );
- 	light.position.set( 0,0,0);
-    	scene.add(light);
-var sun = new Sun(0xFF0000, 100);   
-scene.add(sun.mesh);   
+// light
+var light = new THREE.PointLight( 0xffffff, 1.0 );
+light.position.set( 0,0,0);
+scene.add(light);
+
+// sun
+var sun = new Sun(0xFF0000, 100); 
+
+// planets and moons
 var planetMercury = new Planet("Murcury", 0xFF0000, 15, 359, 88, 0, sun);
 var planetVenus = new Planet("Venus", 0xFF9900, 38, 672, 225, 0, sun);
 var planetEarth = new Planet("Earth", 0x009944, 40, 929, 365, 0, sun);
+var moon = new Planet("Moon", 0x444444, 10, 65, 30, 0, planetEarth);
 var planetMars = new Planet("Mars", 0xFF1111, 21, 1416, 687, 0, sun);
+
+// create child/parent tree
 sun.AddChild(planetMercury);
 sun.AddChild(planetVenus);
 sun.AddChild(planetEarth);
 sun.AddChild(planetMars);
+planetEarth.AddChild(moon);
 
+// add all meshes to scene
+scene.add(sun.mesh);  
 scene.add(planetMercury.mesh);
 scene.add(planetVenus.mesh);
 scene.add(planetEarth.mesh);
+scene.add(moon.mesh);
 scene.add(planetMars.mesh);
-	render();
+render();
 	
-	function render() {
-		requestAnimFrame(render);
-		update();	
-		renderer.render(scene, camera);
-	}
-	function update(){
-		sun.Update();
-		
-	}	
-    </script>
+function render() {
+	requestAnimFrame(render);
+	update();	
+	renderer.render(scene, camera);
+}
+
+function update(){
+	sun.Update();
+}	
+</script>
   </body>
 </html>     
