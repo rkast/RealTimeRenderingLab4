@@ -134,21 +134,12 @@
         scene.add(planetMars.mesh);
 		
 		// background
-		/*
-		THREE.ImageUtils.crossOrigin = '';
-	    var backgroundTexture = THREE.ImageUtils.loadTexture( 'http://i.imgur.com/Uluahlu.jpg' );
-	    var backgroundMesh = new THREE.Mesh(
-            new THREE.PlaneGeometry(2, 2, 0),
-            new THREE.MeshBasicMaterial({
-                map: backgroundTexture
-            }));
-        backgroundMesh.material.depthTest = false;
-        backgroundMesh.material.depthWrite = false;
-	    backgroundScene = new THREE.Scene();
-        backgroundCamera = new THREE.Camera();
-        backgroundScene.add(backgroundCamera);
-        backgroundScene.add(backgroundMesh);
-		*/
+		var bgGeometry  = new THREE.SphereGeometry(3000, 32, 32);
+		var bgMaterial  = new THREE.MeshBasicMaterial();
+		bgMaterial.map   = THREE.ImageUtils.loadTexture('http://i.imgur.com/3NQcM7r.jpg');
+		bgMaterial.side  = THREE.BackSide;
+		var bgMesh  = new THREE.Mesh(bgGeometry, bgMaterial);
+		scene.add(bgMesh);
 		
         // renderer
         renderer = new THREE.WebGLRenderer({ antialias: false });
