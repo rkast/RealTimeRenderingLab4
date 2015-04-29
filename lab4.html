@@ -12,9 +12,9 @@
   <body>
     <div id="container"></div>
 	<canvas id="canvas" style="border: none;" width="256" height="256">
-<script src="../lab4/js/webgl-utils.js"></script>
-<script src="../lab4/js/planetClass.js"></script>
-<script src="../lab4/js/sunClass.js"></script>
+<script src="js/webgl-utils.js"></script>
+<script src="js/planetClass.js"></script>
+<script src="js/sunClass.js"></script>
 <script src="http://www.html5canvastutorials.com/libraries/three.min.js"></script>
 <script id="vertex-shader" type="x-shader/x-vertex">
 	attribute vec4 vPosition;
@@ -86,6 +86,20 @@ void main(void)
       // scene
       var scene = new THREE.Scene();
 	
+	  // background
+	  var backgroundTexture = THREE.ImageUtils.loadTexture( 'textures/universe.jpg' );
+	  var backgroundMesh = new THREE.Mesh(
+            new THREE.PlaneGeometry(2, 2, 0),
+            new THREE.MeshBasicMaterial({
+                map: backgroundTexture
+            }));
+      backgroundMesh.material.depthTest = false;
+      backgroundMesh.material.depthWrite = false;
+	  var backgroundScene = new THREE.Scene();
+      var backgroundCamera = new THREE.Camera();
+      backgroundScene.add(backgroundCamera);
+      backgroundScene.add(backgroundMesh);
+	
 	var light = new THREE.PointLight( 0xffffff, 1.0 );
  	light.position.set( 0,0,0);
     	scene.add(light);
@@ -108,7 +122,8 @@ scene.add(planetMars.mesh);
 	
 	function render() {
 		requestAnimFrame(render);
-		update();	
+		update();
+		renderer.render(backgroundScene, backgroundCamera);
 		renderer.render(scene, camera);
 	}
 	function update(){
