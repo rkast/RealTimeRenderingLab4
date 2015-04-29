@@ -119,11 +119,10 @@
         sun = new Sun(100);
         scene.add(sun.mesh);
 		
-		var url = 'http://i.imgur.com/GNAxUAg.jpg';
-        var planetMercury = new Planet("Murcury", url, 15, 359, 88, 0, sun);
-        var planetVenus = new Planet("Venus", url, 38, 672, 225, 0, sun);
-        var planetEarth = new Planet("Earth", url, 40, 929, 365, 0, sun);
-        var planetMars = new Planet("Mars", url, 21, 1416, 687, 0, sun);
+        var planetMercury = new Planet("Murcury", 'http://i.imgur.com/1bUmw0U.jpg', 15, 359, 88, 0, sun);
+        var planetVenus = new Planet("Venus", 'http://i.imgur.com/fYWHB4k.jpg', 38, 672, 225, 0, sun);
+        var planetEarth = new Planet("Earth", 'http://i.imgur.com/GNAxUAg.jpg', 40, 929, 365, 0, sun);
+        var planetMars = new Planet("Mars", 'http://i.imgur.com/ACGzK6C.jpg', 21, 1416, 687, 0, sun);
         sun.AddChild(planetMercury);
         sun.AddChild(planetVenus);
         sun.AddChild(planetEarth);
