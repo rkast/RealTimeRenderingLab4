@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<meta charset="UTF-8"> 
+<meta charset="UTF-8">
 <html>
   <head>
     <style>
@@ -11,6 +11,7 @@
   </head>
   <body>
     <div id="container"></div>
+<<<<<<< HEAD
 	<canvas id="canvas" style="border: none;" width="256" height="256">
 <script src="../lab4/js/webgl-utils.js"></script>
 <script src="../lab4/js/planetClass.js"></script>
@@ -127,5 +128,159 @@ function update(){
 	sun.Update();
 }	
 </script>
+=======
+    <script src="../RealTimeRenderingLab4/js/webgl-utils.js"></script>
+    <script src="../RealTimeRenderingLab4/js/planetClass.js"></script>
+    <script src="../RealTimeRenderingLab4/js/sunClass.js"></script>
+    <script src="../RealTimeRenderingLab4/js/three.min.js"></script>
+    <script src="../RealTimeRenderingLab4/js/OrbitControls.js"></script>
+
+    <script id="vertex-shader" type="x-shader/x-vertex">
+
+      attribute vec4 vPosition;
+      attribute vec4 vNormal;
+      varying vec4 fColor;
+
+      uniform vec4 ambientProduct, diffuseProduct, specularProduct;
+      uniform mat4 modelViewMatrix;
+      uniform mat4 projectionMatrix;
+      uniform vec4 lightPosition;
+      uniform float shininess;
+      uniform mat3 normalMatrix;
+
+      void main(void)
+      {
+        vec3 pos = -(modelViewMatrix * vPosition).xyz;
+        vec3 light = lightPosition.xyz;
+        vec3 L = normalize( light - pos );
+
+        vec3 E = normalize( -pos );
+        vec3 H = normalize( L + E );
+        // Transform vertex normal into eye coordinates
+        vec3 N = normalize( normalMatrix*vNormal.xyz);
+        // Compute terms in the illumination equation
+        vec4 ambient = ambientProduct;
+
+        float Kd = max( dot(L, N), 0.0 );
+        vec4 diffuse = Kd*diffuseProduct;
+
+        float Ks = pow( max(dot(N, H), 0.0), shininess );
+        vec4 specular = Ks * specularProduct;
+
+        if( dot(L, N) < 0.0 ) {
+          specular = vec4(0.0, 0.0, 0.0, 1.0);
+        }
+
+        gl_Position = projectionMatrix * modelViewMatrix * vPosition;
+
+        fColor = ambient + diffuse + specular;
+        fColor.a = 1.0;
+      }
+    </script>
+
+    <script id="fragment-shader" type="x-shader/x-fragment">
+
+      precision mediump float;
+
+      //varying vec4 fColor;
+
+      void main(void)
+      {
+        gl_FragColor = (1,1,1,1);
+      }
+    </script>
+    <script>
+
+      var externalCanvas, renderer, camera, controls, scene, container, light, sun, backgroundScene, backgroundCamera;
+
+      init();
+      animate();
+
+      function animate() {
+        requestAnimationFrame(animate);
+        render();
+        update();
+        controls.update();
+      }
+
+      function init() {
+        // camera
+        camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1000, 10000);
+        camera.position.z = 3500;
+
+        // controls
+        controls = new THREE.OrbitControls(camera);
+        controls.damping = 0.2;
+        controls.addEventListener("change", render);
+
+        // scene
+        scene = new THREE.Scene();
+		THREE.ImageUtils.crossOrigin = '';
+		
+		// sun light
+      	light = new THREE.PointLight( 0xffffff, 1.0 );
+       	light.position.set( 0,0,0);
+		scene.add(light);
+		
+		// environmental lights
+		var dirLight1 = new THREE.DirectionalLight( 0xffffff, 0.2 );
+		dirLight1.position.set( 1, 0, 0 );
+		var dirLight2 = new THREE.DirectionalLight( 0xffffff, 0.2 );
+		dirLight2.position.set( -1, 0, 0 );
+		var dirLight3 = new THREE.DirectionalLight( 0xffffff, 0.2 );
+		dirLight3.position.set( 0, 0, 1 );
+		var dirLight4 = new THREE.DirectionalLight( 0xffffff, 0.2 );
+		dirLight4.position.set( 0, 0, -1 );
+		scene.add( dirLight1 );
+		scene.add( dirLight2 );
+		scene.add( dirLight3 );
+		scene.add( dirLight4 );
+      	
+		// sun
+        sun = new Sun(100);
+        scene.add(sun.mesh);
+		
+		// planets
+        var planetMercury = new Planet("Murcury", 'http://i.imgur.com/1bUmw0U.jpg', 15, 359, 88, 0, sun);
+        var planetVenus = new Planet("Venus", 'http://i.imgur.com/fYWHB4k.jpg', 38, 672, 225, 0, sun);
+        var planetEarth = new Planet("Earth", 'http://i.imgur.com/GNAxUAg.jpg', 40, 929, 365, 0, sun);
+        var planetMars = new Planet("Mars", 'http://i.imgur.com/ACGzK6C.jpg', 21, 1416, 687, 0, sun);
+        sun.AddChild(planetMercury);
+        sun.AddChild(planetVenus);
+        sun.AddChild(planetEarth);
+        sun.AddChild(planetMars);
+
+        scene.add(planetMercury.mesh);
+        scene.add(planetVenus.mesh);
+        scene.add(planetEarth.mesh);
+        scene.add(planetMars.mesh);
+		
+		// starfield
+		var bgGeometry  = new THREE.SphereGeometry(3000, 32, 32);
+		var bgMaterial  = new THREE.MeshBasicMaterial();
+		bgMaterial.map   = THREE.ImageUtils.loadTexture('http://i.imgur.com/3NQcM7r.jpg');
+		bgMaterial.side  = THREE.BackSide;
+		var bgMesh  = new THREE.Mesh(bgGeometry, bgMaterial);
+		scene.add(bgMesh);
+		
+        // renderer
+        renderer = new THREE.WebGLRenderer({ antialias: false });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        container = document.getElementById('container');
+        container.appendChild(renderer.domElement);
+
+        animate();
+      }
+
+      function render() {
+        renderer.render(scene, camera);
+      }
+
+      function update(){
+        sun.Update();
+      }
+    </script>
+>>>>>>> 5a938f5cda835359d669b725a34c60ee2b6366e9
   </body>
-</html>     
+</html>

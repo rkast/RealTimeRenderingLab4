@@ -1,6 +1,7 @@
-function Planet (pName, color, radius, distanceToSun, year, day, parent){
+function Planet (pName, mat, radius, distanceToSun, year, day, parent){
 	this.planetName = pName;
-	this.color = color;
+	this.material = new THREE.MeshPhongMaterial();
+	this.material.map = THREE.ImageUtils.loadTexture(mat);
 	this.radius = radius;
 	this.distToSun = distanceToSun;
 	this.year = year;
@@ -9,7 +10,7 @@ function Planet (pName, color, radius, distanceToSun, year, day, parent){
 	this.theta = 0;
 	this.segs = 100;
 	this.location = new THREE.Vector3(distanceToSun,0,0);
-	this.mesh = new THREE.Mesh(new THREE.SphereGeometry(this.radius, this.segs, this.segs), new THREE.MeshPhongMaterial( { abmient: 0x050505, color: this.color, specular: 0x555555, shininess: 10 } ));
+	this.mesh = new THREE.Mesh(new THREE.SphereGeometry(this.radius, this.segs, this.segs), this.material);
 	this.mesh.overdraw = true;
 	this.mesh.position.set(this.location);
 	this.children = [];
