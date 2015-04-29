@@ -1,9 +1,10 @@
-function Sun (color, radius){
-	this.color = color;
+function Sun (radius){
+	this.material = new THREE.MeshBasicMaterial();
+	this.material.map = THREE.ImageUtils.loadTexture('http://i.imgur.com/bN0x1HB.jpg');
 	this.radius = radius;
 	this.segs = 100;
 	this.location = new THREE.Vector3(0,0,0);
-	this.mesh = new THREE.Mesh(new THREE.SphereGeometry(this.radius, this.segs, this.segs), new THREE.MeshBasicMaterial( { color: this.color } ));
+	this.mesh = new THREE.Mesh(new THREE.SphereGeometry(this.radius, this.segs, this.segs), this.material);
 	this.mesh.overdraw = true;
 	this.mesh.position.set(this.location);
 	this.children = [];

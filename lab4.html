@@ -98,12 +98,13 @@
         // scene
         scene = new THREE.Scene();
 
+		THREE.ImageUtils.crossOrigin = '';
       	light = new THREE.PointLight( 0xffffff, 1.0 );
        	light.position.set( 0,0,0);
       	scene.add(light);
-        sun = new Sun(0xFF0000, 100);
+        sun = new Sun(100);
         scene.add(sun.mesh);
-		THREE.ImageUtils.crossOrigin = '';
+		
 		var url = 'http://i.imgur.com/GNAxUAg.jpg';
         var planetMercury = new Planet("Murcury", url, 15, 359, 88, 0, sun);
         var planetVenus = new Planet("Venus", url, 38, 672, 225, 0, sun);
