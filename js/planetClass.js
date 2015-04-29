@@ -24,7 +24,7 @@ function Planet (pName, color, radius, distanceToSun, year, day, parent){
 		var z = parentLocation.z;
 		
 		// update and set location and rotation
-		//var rotationAxis = new THREE.Vector3(8.4,0,10);
+		// var rotationAxis = new THREE.Vector3(8.4,0,10);
 		this.location = new THREE.Vector3(x,y,z);
 		this.mesh.position.set(x,y,z);
 
