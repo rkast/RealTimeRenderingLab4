@@ -76,18 +76,19 @@
       var externalCanvas, renderer, camera, controls, scene, container, light, sun;
 
       init();
-      render();
+      animate();
 
       function animate() {
         requestAnimationFrame(animate);
-        controls.update();
+        render();
         update();
+        controls.update();
       }
 
       function init() {
         // camera
         camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1000, 10000);
-        camera.position.z = 500;
+        camera.position.z = 3500;
 
         // controls
         controls = new THREE.OrbitControls(camera);
